@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_recruitment_task/domain/movie/entities/movie_entity.dart';
@@ -11,9 +13,24 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
 
   final SearchMovieUseCase searchMovieUseCase;
   final ScrollController scrollController = ScrollController();
+  Timer? timer;
 
   void init() async {
-    Result<List<MovieEntity>> response = await searchMovieUseCase.searchMovie(query: "spider man");
+    emit(Result.loading());
+    Result<List<MovieEntity>> response =
+        await searchMovieUseCase.searchMovie(query: "spider man");
     emit(response);
+  }
+
+  void instantSearch({String query = ""}) async {
+    emit(Result.loading());
+    if (timer != null) {
+      timer!.cancel();
+    }
+    timer = Timer(Duration(milliseconds: 500), () async {
+      Result<List<MovieEntity>> response =
+          await searchMovieUseCase.searchMovie(query: query);
+      emit(response);
+    });
   }
 }
