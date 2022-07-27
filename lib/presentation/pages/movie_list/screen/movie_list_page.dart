@@ -45,7 +45,8 @@ class MovieListPage extends StatelessWidget implements AutoRouteWrapper {
                       return MovieList(
                         scrollController:
                             context.read<MovieListCubit>().scrollController,
-                        isLoading: false,
+                        isLoading:
+                            context.read<MovieListCubit>().isLoadingNextPage,
                         movies: data,
                         onTap: (MovieEntity movie) {
                           AutoRouter.of(context).push(
