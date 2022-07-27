@@ -5,8 +5,10 @@ import 'package:flutter_recruitment_task/style/colors.dart';
 
 class SearchBox extends StatelessWidget {
   final void Function(String)? onSubmitted;
+  final void Function(String)? onChanged;
 
-  const SearchBox({Key? key, this.onSubmitted}) : super(key: key);
+  const SearchBox({Key? key, this.onSubmitted, this.onChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
@@ -25,6 +27,7 @@ class SearchBox extends StatelessWidget {
             hintText: LocaleKeys.search.tr(),
           ),
           onSubmitted: onSubmitted,
+          onChanged: onChanged,
         ),
       );
 }
