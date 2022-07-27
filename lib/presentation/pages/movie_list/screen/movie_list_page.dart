@@ -26,6 +26,8 @@ class MovieListPage extends StatelessWidget implements AutoRouteWrapper {
                   onChanged: (String query) => context
                       .read<MovieListCubit>()
                       .instantSearch(query: query),
+                  onSubmitted: (String query) =>
+                      context.read<MovieListCubit>().search(query: query),
                 ),
                 Expanded(
                   child: state.when(
