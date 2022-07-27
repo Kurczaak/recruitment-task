@@ -18,43 +18,43 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
 
   // Pagination
   bool isLoadingNextPage = false;
-  int currentPage = 1;
-  String currentQuery = '';
-  List<MovieEntity> loadedMovies = [];
-  int lastResultsLen = 0;
+  int _currentPage = 1;
+  String _currentQuery = '';
+  List<MovieEntity> _loadedMovies = [];
 
   void _clearPaginationData() {
     isLoadingNextPage = false;
-    currentPage = 1;
+    _currentPage = 1;
   }
 
   void init() async {
     emit(Result.loading());
-    currentQuery = "spider man";
+    _currentQuery = "spider man";
     Result<List<MovieEntity>> response =
-        await searchMovieUseCase.searchMovie(query: currentQuery);
+        await searchMovieUseCase.searchMovie(query: _currentQuery);
     emit(response);
     response.whenOrNull(() => null,
-        success: (results) => loadedMovies = results);
+        success: (results) => _loadedMovies = results);
     scrollController.addListener(() async {
-      await loadNextPage();
+      await _loadNextPage();
     });
   }
 
-  Future<void> loadNextPage() async {
+  Future<void> _loadNextPage() async {
     if (scrollController.position.extentAfter <
             0.8 * scrollController.position.maxScrollExtent &&
         !isLoadingNextPage) {
       isLoadingNextPage = true;
 
       Result<List<MovieEntity>> response = await searchMovieUseCase.searchMovie(
-          query: currentQuery, page: currentPage + 1);
+          query: _currentQuery, page: _currentPage + 1);
 
       response.whenOrNull(() => emit(response), success: (results) {
-        loadedMovies.addAll(results);
-        loadedMovies = [...loadedMovies];
-        emit(Result.success(loadedMovies));
-        if (results.length > 0) currentPage++;
+        _loadedMovies.addAll(results);
+        // Create a copy of the list since no data equality
+        _loadedMovies = [..._loadedMovies];
+        emit(Result.success(_loadedMovies));
+        if (results.length > 0) _currentPage++;
       });
 
       isLoadingNextPage = false;
@@ -64,7 +64,7 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
   /// Searches for movies by [query] with no debouncing
   void search({String query = ""}) async {
     _clearPaginationData();
-    currentQuery = query;
+    _currentQuery = query;
     // Cancel the timer to prevent getting old results
     timer?.cancel();
     emit(Result.loading());
@@ -73,13 +73,13 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
         await searchMovieUseCase.searchMovie(query: query);
     emit(response);
     response.whenOrNull(() => null,
-        success: (results) => loadedMovies = results);
+        success: (results) => _loadedMovies = results);
   }
 
   /// Searches for movies by [query] with the [debounceTime] specified in the cubit
   void instantSearch({String query = ""}) async {
     _clearPaginationData();
-    currentQuery = query;
+    _currentQuery = query;
     emit(Result.loading());
     if (timer != null) {
       timer!.cancel();
@@ -89,7 +89,7 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
           await searchMovieUseCase.searchMovie(query: query);
       emit(response);
       response.whenOrNull(() => null,
-          success: (results) => loadedMovies = results);
+          success: (results) => _loadedMovies = results);
     });
   }
 }
