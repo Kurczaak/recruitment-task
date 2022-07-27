@@ -22,7 +22,11 @@ class MovieListPage extends StatelessWidget implements AutoRouteWrapper {
           builder: (context, state) {
             return Column(
               children: <Widget>[
-                SearchBox(),
+                SearchBox(
+                  onChanged: (String query) => context
+                      .read<MovieListCubit>()
+                      .instantSearch(query: query),
+                ),
                 Expanded(
                   child: state.when(
                     () => Container(),
@@ -37,7 +41,8 @@ class MovieListPage extends StatelessWidget implements AutoRouteWrapper {
                         return EmptyResultScreen();
                       }
                       return MovieList(
-                        scrollController: context.read<MovieListCubit>().scrollController,
+                        scrollController:
+                            context.read<MovieListCubit>().scrollController,
                         isLoading: false,
                         movies: data,
                         onTap: (MovieEntity movie) {
