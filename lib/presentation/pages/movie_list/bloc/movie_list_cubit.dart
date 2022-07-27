@@ -25,6 +25,8 @@ class MovieListCubit extends Cubit<Result<List<MovieEntity>>> {
 
   /// Searches for movies by [query] with no debouncing
   void search({String query = ""}) async {
+    // Cancel the timer to prevent getting old results
+    timer?.cancel();
     emit(Result.loading());
 
     Result<List<MovieEntity>> response =
