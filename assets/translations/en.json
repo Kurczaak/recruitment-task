@@ -1,0 +1,12 @@
+{
+  "hello_world": "Hello!",
+  "budget" : "Budget",
+  "revenue" : "Revenue",
+  "should_watch" : "Should I watch it?",
+  "yes" : "Yes",
+  "no" : "No",
+  "empty_result" : "No results found",
+  "error_text" : "Something went wrong",
+  "no_internet_error" : "No Internet connection. Try again.",
+  "search" : "Search..."
+}
